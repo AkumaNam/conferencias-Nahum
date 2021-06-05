@@ -29,7 +29,7 @@ participantes = [
      }
 ]
 # Create your views here.
-def index(request): 
+def tarea(request): 
 
      
 
@@ -51,7 +51,7 @@ def index(request):
           }
           
           #return HttpResponse('El participante ha sido registrado')
-          return render(request, 'registro/index.html', ctx)
+          return render(request, 'Tarea1/index.html', ctx)
      else:
           #el metodo GET
           #contexto q va pa la plantilla
@@ -59,4 +59,4 @@ def index(request):
                'participantes': participantes
           }
           
-          return render(request, 'registro/index.html', ctx)
+          return render(request, 'Tarea1/index.html', ctx)
