@@ -20,5 +20,6 @@ from app_registro import views
 urlpatterns = [
     #si es pequeño todo aqui sino la 3 opcion de arriva
     path('admin/', admin.site.urls),
-    path('participantes/', views.index, name="index"),
+    path('', views.index, name='index'),
+    path('participantes/', views.participantes, name="participantes"),
 ]

@@ -1,35 +1,17 @@
+
+from app_registro.models import Participantes
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 
 
-participantes = [
-     {
-          'nombre': 'Juan',
-          'apellido': 'Lopez',
-          'correo' : 'jaun@gmail.com',
-          'twitter': 'juan.lopez'
-     },
-     {
-          'nombre': 'Maria',
-          'apellido': 'Gomez',
-          'correo' : 'maria@gmail.com',
-          'twitter': 'maria.gomez'
-     },
-     {
-          'nombre': 'Karla',
-          'apellido': 'Herrera',
-          'correo' : 'karla.herrera@gmail.com',
-          'twitter': 'karla.herrerra'
-     },
-     {
-          'nombre': 'Josue',
-          'apellido': 'Alvarez',
-          'correo' : 'JosueAlvarez@gmail.com',
-          'twitter': 'Josuetec2003'
-     }
-]
+
 # Create your views here.
-def index(request): 
+def index(request):
+     return render(request, 'registro/index.html')
+
+
+def participantes(request): 
 
      
 
@@ -39,24 +21,37 @@ def index(request):
           correo = request.POST.get('correo')
           twitter = request.POST.get('twitter')
 
-          participantes.append({
+          p = Participantes(nombre = nombre, apellido = apellido, correo = correo, twitter = twitter)
+          p.save()
+          
+          messages.add_message(request, messages.INFO, 'El participante {nombre} {apellido} ha sido registrado con exito')
+          '''
+          return JsonResponse({
                'nombre': nombre,
                'apellido': apellido,
-               'correo' : correo,
+               'correo': correo,
                'twitter': twitter,
+               'Ok': True,
+               'msj' : 'El participante ha sido registrado con exito'
           })
+          '''
 
-          ctx = {
-               'participantes': participantes
-          }
+          #ctx = {
+           
+          #    'participantes':  Participantes.objects.all().order_by('nombre')
+          #}
           
           #return HttpResponse('El participante ha sido registrado')
-          return render(request, 'registro/index.html', ctx)
-     else:
-          #el metodo GET
-          #contexto q va pa la plantilla
-          ctx = {
-               'participantes': participantes
-          }
+          #return render(request, 'registro/participantes.html', ctx)
+     
+     #Metodo GET, PUT, PATVH, DELETE
+
+     #la primera consulta: select * from participantes
+     #realizar un Queryset con el ORM de DJANGO
+     data = Participantes.objects.all().order_by('nombre')
+
+     ctx = {
+          'participantes': data
+     }
           
-          return render(request, 'registro/index.html', ctx)
+     return render(request, 'registro/participantes.html', ctx)
