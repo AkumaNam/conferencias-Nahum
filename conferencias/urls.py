@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('participantes/', views.participantes, name="participantes"),
+    path('participantes/<int:id>/eliminar/', views.eliminar_participantes, name='eliminar_participante'),
+    path('participantes/<int:id>/editar/', views.editar_participantes, name='editar_participante'),
 ]

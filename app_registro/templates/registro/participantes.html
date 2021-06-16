@@ -10,57 +10,86 @@
     <div class="row">
         <!--formulario-->
         <div class="col-3">
-            <form action="" method="post">
+            {% if p %}
+            <form action="{% url 'editar_participante' p.id %}" method="post">
+            {% else %}
+            <form action="{% url 'participantes' %}" method="post">
+            {% endif %}
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="nombre" >Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control" required autofocus>
+                    <input type="text" value="{{ p.nombre }}" name="nombre" id="nombre" class="form-control" required autofocus>
                 </div>
 
                 <div class="mb-3">
                     <label for="apellido">Apellido</label>
-                    <input type="text" name="apellido" id="apellido" class="form-control" required>
+                    <input type="text" value="{{ p.apellido }}" name="apellido" id="apellido" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="correo">Correo</label>
-                    <input type="email" name="correo" id="correo" class="form-control" required>
+                    <input type="email" value="{{ p.correo }}" name="correo" id="correo" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="twitter">Twitter</label>
-                    <input type="text" name="twitter" id="twitter" class="form-control" required>
+                    <input type="text" value="{{ p.twitter }}" name="twitter" id="twitter" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="submit" class="btn btn-success" value="Registrar">
+                    {% if p %}
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                    {% else %}
+                        <input type="submit" class="btn btn-success" value="Registrar">
+                    {% endif %}
+                    
                 </div>
             </form>
         </div>
         <!--Datos-->
         <div class="col-9">
-        <h2>Participantes</h2>
+        {% if messages %}
+            <div  class="alert alert-success mb-2">
+            {% for message in messages %}
+                {{ message|safe }}
+            {% endfor %}
+            </div >
+        {% endif %}
+
+        <form action="" method="get">
+            <input type="search" name="q" value="{{ q| default_if_none:'' }}" class="form-control" placeholder="Buscar Participante">
+        </form>
+
+        <h2 class="mt-3">Participantes: {{ participantes.count }}</h2>
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Correo</th>
-                        <th>twitter</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Apellido</th>
+                        <th class="text-center">Correo</th>
+                        <th class="text-center">twitter</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for p in participantes %}
 
                         <tr>
-                            <td>{{ p.nombre }}</td>
-                            <td>{{ p.apellido }}</td>
-                            <td>{{ p.correo }}</td>
-                            <td> 
+                            <td class="text-center">{{ p.nombre }}</td>
+                            <td class="text-center">{{ p.apellido }}</td>
+                            <td class="text-center">{{ p.correo }}</td>
+                            <td class="text-center"> 
                                 {{ p.twitter|default_if_none:'-----'}}
                             </td>
+                            <td class="text-center">
+                                <a onclick="if (!confirm('Confirme la eliminacion')) return false" href="{% url 'eliminar_participante' p.id %}" class="text-danger"><span class="fas fa-trash-alt"></span></a>
+                                <a href="{% url 'editar_participante' p.id %}" class="text-success"><span class="fas fa-edit"></span></a>
+                            </td>
                         </tr>
-
+                    {% empty %}
+                    <tr>
+                        <td class="text-danger text-center" colspan="">No se encontraron resultados</td>
+                    </tr>
                     {% endfor %}
 
                 </tbody>
@@ -68,3 +97,17 @@
         </div>
     </div>
 {% endblock  %}
+
+{% block js %}
+<script>
+    $(function () {
+        
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+
+    });
+</script>
+{% endblock js %}
