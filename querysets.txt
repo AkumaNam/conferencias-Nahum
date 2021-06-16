@@ -1,0 +1,46 @@
+arriba query, abajo queryset
+
+SENTENCIAS SQL                                                              QUERYSET
+
+SELECT *                                                                    results = Participantes.objects.all()
+FROM Participantes
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT COUNT(*)                                                             conteo = Participantes.objects.all().count() || Participantes.objects.count()
+FROM Participantes                                                          results.count()
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT *                                                                    pendientes = Conferencias.objects.filter(estado='1')
+FROM Conferencias
+WHERE estado = '1'
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT COUNT(*)                                                             pendientes = Conferencias.objects.filter(estado='1').count()
+FROM Conferencias                                                           pendientes.count()
+WHERE estado = '1'
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Conferencias q no estan en estado pendientes
+
+SELECT *                                                                    no_pendientes = Conferencias.objects.exclude(estado='1')
+FROM Conferencias                                                           no_pendientes.count()
+WHERE estado <> '1'
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT *                                                                    cupos = Conferencias.objects.filter(cupos__gt = 10)
+FROM Conferencias
+WHERE cupos > 10
+
+-- > = gt
+-- >=  = gte
+-- < = lt
+-- <=  = lte
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Conferencias cuyo nombre comience con d|D
+
+SELECT *                                                                    
+FROM Conferencias                                                           
+WHERE nombre like 'd%'                                                      confs = Conferencias.objects.filter(nombre__startswith='d')
+WHERE nombre like '%d'                                                      confs = Conferencias.objects.filter(nombre__endwith='d')
+WHERE nombre like '%d%'                                                     confs = Conferencias.objects.filter(nombre__contains='d')
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT C.nombre, CF.nombre                                                  confs1.conferencista.all()
+FROM Conferencias C INNER JOIN Conferencistas CF
+    ON C.ConfrencistaID = CF.ConferencistaID
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+group by
