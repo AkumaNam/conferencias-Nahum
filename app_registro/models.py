@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.fields import DateTimeField
-
+from datetime import datetime, timedelta
 '''
     Tipos de datos para los campos de los modelos:
     - Todos los campos se obtienen de models
@@ -42,9 +42,23 @@ class Conferencia(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha = models.DateField()
     hora = models.TimeField()
+    duracion = models.SmallIntegerField(default='2')
     conferencista = models.ManyToManyField(Conferencista, blank=True)
     estado = models.CharField(max_length=1, choices=ESTADOS, default='1')
     cupos = models.SmallIntegerField(default=10)
+
+    @property
+    def tiempo_restante(self):
+        hoy = datetime.now().date()
+
+        if hoy > self.fecha: #la conferencia ya paso
+            dias = (hoy - self.fecha).days
+            return f'La conferencia ya pasó, hace {dias}'
+        elif hoy == self.fecha:
+            return 'La conferencia es hoy'
+        else:
+            dias = (self.fecha - hoy).days
+            return f'La conferencia es dentro de {dias} dias'
 
     def __str__(self):
         return f'Conferencia: {self.nombre}'
