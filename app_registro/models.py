@@ -25,6 +25,7 @@ class Conferencista(models.Model):
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=30)
     experiencia = models.TextField(null=True)
+    foto = models.ImageField(upload_to = 'conferencistas', null = True, blank = True)
 
     def __str__(self) -> str:
         return self.nombre
