@@ -3,8 +3,8 @@ from django.contrib.admin.decorators import register
 from app_registro.models import Conferencia, Conferencista, Participantes, Asistencia
 # Register your models here.
 class ConferenciaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nombre', 'fecha', 'hora',)
-    list_editable = ('nombre',)
+    list_display = ('id', 'nombre', 'fecha', 'hora', 'estado',)
+    list_editable = ('nombre','fecha', 'estado',)
 #--------------------------------------------------------------------------------------------------
 admin.site.register(Conferencia, ConferenciaAdmin)
 #--------------------------------------------------------------------------------------------------

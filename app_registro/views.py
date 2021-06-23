@@ -2,7 +2,7 @@
 from typing import Text
 
 from django import http
-from app_registro.models import Participantes
+from app_registro.models import Participantes, Conferencia
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
@@ -130,3 +130,9 @@ def editar_participantes(request, id):
      }
           
      return render(request, 'registro/participantes.html', ctx)
+
+
+def conferencias(request):
+     confs = Conferencia.objects.filter(estado = '1').order_by('fecha')
+
+     return render(request, 'registro/conferencias.html', {'confs' : confs})
