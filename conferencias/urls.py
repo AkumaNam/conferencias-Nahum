@@ -15,19 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from app_registro import views
 from django.conf import settings
 from django.conf.urls.static import static
+from app_seguridad import views
 
 urlpatterns = [
     #si es pequeño todo aqui sino la 3 opcion de arriva
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('participantes/', views.participantes, name="participantes"),
-    path('participantes/<int:id>/eliminar/', views.eliminar_participantes, name='eliminar_participante'),
-    path('participantes/<int:id>/editar/', views.editar_participantes, name='editar_participante'),
-    path('conferencias/', views.conferencias, name='conferencias')
-    
+    path('registro/', include('app_registro.urls')),
+    path('', views.index),
+    path('login/', views.log_in, name="login_view"),
+
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
