@@ -24,7 +24,7 @@
                   <a href="{% url 'registro:participantes' %}" class="nav-link {% if activo == participantes %}active{% endif %}">Participantes</a>
                   <a href="#" class="nav-link {% if activo == conferencistas %}active{% endif %}">Conferencistas</a>
                   <a href="#" class="nav-link {% if activo == conferencias %}active{% endif %}">Conferencias</a>
-                  <a href="#" class="nav-link"></a>
+                  <a href="{% url 'logout_view' %}" class="nav-link">Salir</a>
                 </div>
               </div>
             </div>

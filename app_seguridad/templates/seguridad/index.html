@@ -42,11 +42,27 @@
                 font-size: 3.5rem;
                 }
             }
+
+            #login-error{
+                position: absolute;
+                top: 0;
+                width: 100%; 
+            }
         </style>
 
         
     </head>
     <body class="text-center">
+
+        
+        {% if messages %}
+            {% for message in messages  %}
+                <div id="login-error" class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+            
     
         <main class="form-signin">
             <form action="{% url 'login_view' %}" method="post">
@@ -55,7 +71,7 @@
                 <h1 class="h3 mb-3 fw-normal">Inicia Sesión aquí</h1>
 
                 <div class="form-floating">
-                    <input name="usuario" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input autofocus name="usuario" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Nombre de Usuario</label>
                 </div>
                 <div class="form-floating">
