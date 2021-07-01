@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 from telegram import Bot, chat # pip install python-telegram-bot
 
@@ -137,6 +138,13 @@ def editar_participantes(request, id):
 
 @login_required
 def conferencias(request):
-     confs = Conferencia.objects.filter(estado = '1').order_by('fecha')
+
+     hoy = datetime.now().date()
+
+     confs = Conferencia.objects.filter(fecha__gt = hoy).order_by('fecha')
 
      return render(request, 'registro/conferencias.html', {'confs' : confs})
+
+@login_required
+def asistir(reques, id):
+     return HttpResponse(f'Esta conferencia tiene id {id}')

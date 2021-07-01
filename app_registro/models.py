@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.fields import DateTimeField
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 '''
     Tipos de datos para los campos de los modelos:
     - Todos los campos se obtienen de models
@@ -69,6 +70,7 @@ class Participantes(models.Model):
     apellido = models.CharField(max_length=25)
     correo = models.EmailField()
     twitter = models.CharField(max_length=30, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.nombre} {self.apellido}'

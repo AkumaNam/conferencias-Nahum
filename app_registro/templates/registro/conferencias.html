@@ -26,7 +26,7 @@
                         <li class="list-group-item">Asistencia: <strong>{{ conf.asistencia_set.all.count }}</strong></li>
                     </ul>
                     <div class="card-body">
-                        <a href="#" class="card-link">Card link</a>
+                        <a href="{% url 'registro:asistir' conf.id %}" class="card-link">Asistir</a>
                         <a href="#" class="card-link">Another link</a>
                     </div>
                 </div>
