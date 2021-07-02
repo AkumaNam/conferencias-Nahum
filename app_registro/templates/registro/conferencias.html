@@ -1,19 +1,28 @@
 {% extends "base.html" %}
 
+{% load registro_filters %}
+
 {% block title %}
     Conferencias
 {% endblock %}
 
 {% block container %}
+    {% if messages %}
+        {% for message in messages  %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     <h2>Proximas Conferencias</h2>
     {% if confs %}
         <div class="row">
             {% for conf in confs  %}
             <div class="col-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
+                <div class="card" style="width: 20rem;">
+                    {% for c in conf.conferencista.all %}
+                        <img data-bs-toggle="tooltip" title="{{ c.nombre }} {{ c.apellido }}" width="30%" src="/media/{{ c.foto }}" alt="{{ c.nombre }}" />
+                    {% endfor %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ conf.nombre }}</h5>
+                        <h5 class="card-title">{{ conf.nombre|mayusculas|safe }}</h5>
                         <p class="card-text text-secondary">
                             Publicada hace <strong>{{ conf.fecha_registro | timesince }}</strong>
                         </p>
@@ -22,12 +31,28 @@
                         <li class="list-group-item">Fecha <strong>{{ conf.fecha }}</strong></li>
                         <li class="list-group-item">Hora: <strong>{{ conf.hora }}</strong></li>
                         <li class="list-group-item">Duracion: <strong>{{ conf.duracion }} horas</strong></li>
-                        <li class="list-group-item">Cupos: <strong>{{ conf.cupos }}</strong></li>
+                        <li class="list-group-item">
+                            Cupos: 
+                            {% if conf.cupos_disponibles > 0 %}
+                                <strong>{{ conf.cupos_disponibles }}</strong>
+                            {% else %}
+                                <strong class="text-danger">No hay</strong>
+                            {% endif %}
+                        </li>
                         <li class="list-group-item">Asistencia: <strong>{{ conf.asistencia_set.all.count }}</strong></li>
+
                     </ul>
                     <div class="card-body">
-                        <a href="{% url 'registro:asistir' conf.id %}" class="card-link">Asistir</a>
-                        <a href="#" class="card-link">Another link</a>
+                        {% if conf.cupos > 0 %}
+                            {% validar_asistencia conf request.user.participantes as asistencia %}
+
+                            {% if asistencia %}
+                            <a class="text-danger" href="{% url 'registro:asistir' conf.id 'salirme' %}" class="card-link">Salirme</a>
+                            {% else %}
+                            <a href="{% url 'registro:asistir' conf.id 'asistir'  %}" class="card-link">Asistir</a>
+                            {% endif %}
+                        {% endif %} 
+                        
                     </div>
                 </div>
             </div>
