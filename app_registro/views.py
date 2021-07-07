@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from time import sleep
 
 
 from telegram import Bot, chat # pip install python-telegram-bot
@@ -144,6 +145,7 @@ def conferencias(request):
 
 @login_required()
 def asistir(request, id, accion):
+
     if accion == 'asistir':
         # Obteniendo el objeto Conferencia utilizando el id de la URL
         conf = get_object_or_404(Conferencia, pk=id)
@@ -170,3 +172,13 @@ def asistir(request, id, accion):
 
     else:
         raise Http404("No encontramos lo que buscas")
+
+def ajax_view(request):
+     if request.is_ajax():
+          ctx = {'respuesta': 'Esto es AJAX'}
+
+          sleep(5)
+
+          return JsonResponse(ctx)
+     else:
+          return Http404('No tienes permiso para visualizar esta pagina')
