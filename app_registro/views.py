@@ -174,11 +174,26 @@ def asistir(request, id, accion):
         raise Http404("No encontramos lo que buscas")
 
 def ajax_view(request):
-     if request.is_ajax():
-          ctx = {'respuesta': 'Esto es AJAX'}
+     #import pdb; pdb.set_trace()
 
-          sleep(5)
+     if request.is_ajax() and request.method == 'POST':
+          busqueda = request.POST.get('busqueda')
 
+          #Realizar una consulta al modelo conferencia
+          conf = Conferencia.objects.filter(nombre__contains=busqueda)
+
+          if conf:
+               ctx = {'Ok': True, 'msj': f'Hay {conf.count()} conferencias'}
+          else:
+               ctx = {'Ok': False, 'msj': 'No se encntro una conferencia con su busqeuda'}
+          
           return JsonResponse(ctx)
+
+     elif request.is_ajax() and request.method == 'GET':
+          pass
+
+     elif request.method == 'POST':
+          pass
+     
      else:
           return Http404('No tienes permiso para visualizar esta pagina')

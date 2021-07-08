@@ -12,7 +12,7 @@
         <div class="col-6">
             <!--Formulario-->
             <input id="txt-busqueda" type="text" class="form-control">
-            <button id="btn-buscar" class="btn btn-success mt-2">Enviar</button>
+            <button id="btn-buscar" data-csrf="{{ csrf_token }}" class="btn btn-success mt-2">Enviar</button>
         </div>
         <div class="col-6">
             <!--Resultado-->
@@ -24,19 +24,74 @@
 {% block js %}
 <script>
     $(function () {
-        // agregando el evento click al boton
-        $('#btn-buscar').on('click', function() {
-            var busqueda = $('#txt-busqueda').val();
-            // ajax: json
+        $('#btn-buscar').on('click', function () {
+            //cachear el boton en una variable
+            var $btn = $(this);
+            var $txt = $('txt-buscar');
 
-            $('#resultado').text('Cargando...')
-            $.get('peticion/ajax/', {}, function(response) {
-                $('#resultado').text(response.respuesta);
+            var busqueda = $txt.val().trim();
+
+            if (!busqueda){
+                
+                $txt.val('').focus();
+                return False;
+
+            }
+
+            //se obtenie el valor del atributo data-csrf del boton
+            var csrfToken = $btn.data('csrf');
+
+            var ctx = {
+                'csrfmiddlewaretoken' : csrfToken,
+                'busqueda': busqueda
+            }
+        
+
+            //colocar la palabra cargando... y deshabilitarlo
+            $btn.text('Cargando...').attr('disabled', true);
+
+            //limpiar la caja de texto
+            $txt.val('');
+
+            $.post('/registro/peticion/ajax/', ctx, function(response) {
+                $('#resultado').text(response.msj);
+
+
+                if (response.OK){
+                    $('#resultado').css('color'. 'green')
+                }else{
+                    $('#resultado').css('color'. 'red')
+                }
+
+                
+
+                $btn.removeAttr('disabled')
+                    .text('Enviar');
+                
             }, 'json')
 
             //$('#resultado').text(busqueda)
         })
     })
+
+    
+        //agregando el evento keyup a la caja de texto
+        $('#txt-buscar').on('keyup', function (e) {
+            
+            var tecla = e.keyCode || e.which;
+
+            if (tecla == 13)
+            {
+                $('#btn-buscar').click();
+            }
+        })
+    })
 </script>
 {% endblock js %}
+
+
+    
+
+
+
 
